@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MusicaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Artista">
+          <Key>
+            <PropertyRef Name="id_artista" />
+          </Key>
+          <Property Name="id_artista" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="nchar" MaxLength="10" />
+          <Property Name="edad" Type="smallint" />
+          <Property Name="altura" Type="float" />
+          <Property Name="peso" Type="float" />
+        </EntityType>
+        <EntityType Name="Cancion">
+          <Key>
+            <PropertyRef Name="id_cancion" />
+          </Key>
+          <Property Name="id_cancion" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="nchar" MaxLength="10" />
+          <Property Name="duracion" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="colaboradores" Type="nchar" MaxLength="10" />
+          <Property Name="dj" Type="nchar" MaxLength="10" />
+          <Property Name="id_artista" Type="int" />
+        </EntityType>
+        <EntityType Name="Descarga">
+          <Key>
+            <PropertyRef Name="id_descarga" />
+          </Key>
+          <Property Name="id_descarga" Type="int" Nullable="false" />
+          <Property Name="id_cancion" Type="int" />
+          <Property Name="proveedor" Type="nchar" MaxLength="10" />
+          <Property Name="duracion" Type="float" />
+          <Property Name="navegador" Type="nchar" MaxLength="10" />
+          <Property Name="formato" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="id_manager" />
+          </Key>
+          <Property Name="id_manager" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="nchar" MaxLength="10" />
+          <Property Name="edad" Type="smallint" />
+          <Property Name="direccion" Type="nchar" MaxLength="10" />
+          <Property Name="sueldo" Type="float" />
+        </EntityType>
+        <Association Name="FK_Artista_Manager">
+          <End Role="Artista" Type="Self.Artista" Multiplicity="1" />
+          <End Role="Manager" Type="Self.Manager" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Artista">
+              <PropertyRef Name="id_artista" />
+            </Principal>
+            <Dependent Role="Manager">
+              <PropertyRef Name="id_manager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cancion_Artista">
+          <End Role="Artista" Type="Self.Artista" Multiplicity="0..1" />
+          <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artista">
+              <PropertyRef Name="id_artista" />
+            </Principal>
+            <Dependent Role="Cancion">
+              <PropertyRef Name="id_artista" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Descarga_Cancion">
+          <End Role="Cancion" Type="Self.Cancion" Multiplicity="0..1" />
+          <End Role="Descarga" Type="Self.Descarga" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cancion">
+              <PropertyRef Name="id_cancion" />
+            </Principal>
+            <Dependent Role="Descarga">
+              <PropertyRef Name="id_cancion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="seleccionarDescargas_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="MusicaModelStoreContainer">
+          <EntitySet Name="Artista" EntityType="Self.Artista" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cancion" EntityType="Self.Cancion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Descarga" EntityType="Self.Descarga" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Manager" EntityType="Self.Manager" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Artista_Manager" Association="Self.FK_Artista_Manager">
+            <End Role="Artista" EntitySet="Artista" />
+            <End Role="Manager" EntitySet="Manager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cancion_Artista" Association="Self.FK_Cancion_Artista">
+            <End Role="Artista" EntitySet="Artista" />
+            <End Role="Cancion" EntitySet="Cancion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Descarga_Cancion" Association="Self.FK_Descarga_Cancion">
+            <End Role="Cancion" EntitySet="Cancion" />
+            <End Role="Descarga" EntitySet="Descarga" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MusicaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Artista">
+          <Key>
+            <PropertyRef Name="id_artista" />
+          </Key>
+          <Property Name="id_artista" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="edad" Type="Int16" />
+          <Property Name="altura" Type="Double" />
+          <Property Name="peso" Type="Double" />
+          <NavigationProperty Name="Manager" Relationship="Self.FK_Artista_Manager" FromRole="Artista" ToRole="Manager" />
+          <NavigationProperty Name="Cancion" Relationship="Self.FK_Cancion_Artista" FromRole="Artista" ToRole="Cancion" />
+        </EntityType>
+        <EntityType Name="Cancion">
+          <Key>
+            <PropertyRef Name="id_cancion" />
+          </Key>
+          <Property Name="id_cancion" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="duracion" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="colaboradores" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="dj" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="id_artista" Type="Int32" />
+          <NavigationProperty Name="Artista" Relationship="Self.FK_Cancion_Artista" FromRole="Cancion" ToRole="Artista" />
+          <NavigationProperty Name="Descarga" Relationship="Self.FK_Descarga_Cancion" FromRole="Cancion" ToRole="Descarga" />
+        </EntityType>
+        <EntityType Name="Descarga">
+          <Key>
+            <PropertyRef Name="id_descarga" />
+          </Key>
+          <Property Name="id_descarga" Type="Int32" Nullable="false" />
+          <Property Name="id_cancion" Type="Int32" />
+          <Property Name="proveedor" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="duracion" Type="Double" />
+          <Property Name="navegador" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="formato" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Cancion" Relationship="Self.FK_Descarga_Cancion" FromRole="Descarga" ToRole="Cancion" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="id_manager" />
+          </Key>
+          <Property Name="id_manager" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="edad" Type="Int16" />
+          <Property Name="direccion" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="sueldo" Type="Double" />
+          <NavigationProperty Name="Artista" Relationship="Self.FK_Artista_Manager" FromRole="Manager" ToRole="Artista" />
+        </EntityType>
+        <Association Name="FK_Artista_Manager">
+          <End Role="Artista" Type="Self.Artista" Multiplicity="1" />
+          <End Role="Manager" Type="Self.Manager" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Artista">
+              <PropertyRef Name="id_artista" />
+            </Principal>
+            <Dependent Role="Manager">
+              <PropertyRef Name="id_manager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cancion_Artista">
+          <End Role="Artista" Type="Self.Artista" Multiplicity="0..1" />
+          <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artista">
+              <PropertyRef Name="id_artista" />
+            </Principal>
+            <Dependent Role="Cancion">
+              <PropertyRef Name="id_artista" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Descarga_Cancion">
+          <End Role="Cancion" Type="Self.Cancion" Multiplicity="0..1" />
+          <End Role="Descarga" Type="Self.Descarga" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cancion">
+              <PropertyRef Name="id_cancion" />
+            </Principal>
+            <Dependent Role="Descarga">
+              <PropertyRef Name="id_cancion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MusicaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Artista" EntityType="Self.Artista" />
+          <EntitySet Name="Cancion" EntityType="Self.Cancion" />
+          <EntitySet Name="Descarga" EntityType="Self.Descarga" />
+          <EntitySet Name="Manager" EntityType="Self.Manager" />
+          <AssociationSet Name="FK_Artista_Manager" Association="Self.FK_Artista_Manager">
+            <End Role="Artista" EntitySet="Artista" />
+            <End Role="Manager" EntitySet="Manager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cancion_Artista" Association="Self.FK_Cancion_Artista">
+            <End Role="Artista" EntitySet="Artista" />
+            <End Role="Cancion" EntitySet="Cancion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Descarga_Cancion" Association="Self.FK_Descarga_Cancion">
+            <End Role="Cancion" EntitySet="Cancion" />
+            <End Role="Descarga" EntitySet="Descarga" />
+          </AssociationSet>
+          <FunctionImport Name="seleccionarDescargas_SP" ReturnType="Collection(MusicaModel.seleccionarDescargas_SP_Result)" />
+        </EntityContainer>
+        <ComplexType Name="seleccionarDescargas_SP_Result">
+          <Property Type="Int32" Name="id_descarga" Nullable="false" />
+          <Property Type="Int32" Name="id_cancion" Nullable="true" />
+          <Property Type="String" Name="proveedor" Nullable="true" MaxLength="10" />
+          <Property Type="Double" Name="duracion" Nullable="true" />
+          <Property Type="String" Name="navegador" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="formato" Nullable="true" MaxLength="10" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MusicaModelStoreContainer" CdmEntityContainer="MusicaEntities">
+          <EntitySetMapping Name="Artista">
+            <EntityTypeMapping TypeName="MusicaModel.Artista">
+              <MappingFragment StoreEntitySet="Artista">
+                <ScalarProperty Name="id_artista" ColumnName="id_artista" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="edad" ColumnName="edad" />
+                <ScalarProperty Name="altura" ColumnName="altura" />
+                <ScalarProperty Name="peso" ColumnName="peso" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cancion">
+            <EntityTypeMapping TypeName="MusicaModel.Cancion">
+              <MappingFragment StoreEntitySet="Cancion">
+                <ScalarProperty Name="id_cancion" ColumnName="id_cancion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="duracion" ColumnName="duracion" />
+                <ScalarProperty Name="colaboradores" ColumnName="colaboradores" />
+                <ScalarProperty Name="dj" ColumnName="dj" />
+                <ScalarProperty Name="id_artista" ColumnName="id_artista" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Descarga">
+            <EntityTypeMapping TypeName="MusicaModel.Descarga">
+              <MappingFragment StoreEntitySet="Descarga">
+                <ScalarProperty Name="id_descarga" ColumnName="id_descarga" />
+                <ScalarProperty Name="id_cancion" ColumnName="id_cancion" />
+                <ScalarProperty Name="proveedor" ColumnName="proveedor" />
+                <ScalarProperty Name="duracion" ColumnName="duracion" />
+                <ScalarProperty Name="navegador" ColumnName="navegador" />
+                <ScalarProperty Name="formato" ColumnName="formato" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Manager">
+            <EntityTypeMapping TypeName="MusicaModel.Manager">
+              <MappingFragment StoreEntitySet="Manager">
+                <ScalarProperty Name="id_manager" ColumnName="id_manager" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="edad" ColumnName="edad" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="sueldo" ColumnName="sueldo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="seleccionarDescargas_SP" FunctionName="MusicaModel.Store.seleccionarDescargas_SP">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MusicaModel.seleccionarDescargas_SP_Result">
+                <ScalarProperty Name="id_descarga" ColumnName="id_descarga" />
+                <ScalarProperty Name="id_cancion" ColumnName="id_cancion" />
+                <ScalarProperty Name="proveedor" ColumnName="proveedor" />
+                <ScalarProperty Name="duracion" ColumnName="duracion" />
+                <ScalarProperty Name="navegador" ColumnName="navegador" />
+                <ScalarProperty Name="formato" ColumnName="formato" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
